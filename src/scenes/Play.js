@@ -120,6 +120,7 @@ class Play extends Phaser.Scene {
             this.gameOver = true;
             this.defaultBorderColor = 0xFF0000;
             this.setBorderColor(this.defaultBorderColor);
+            console.log("high score",highScore);
         }
 
         // border flashing effect variables
@@ -135,12 +136,6 @@ class Play extends Phaser.Scene {
 
     update(time, delta) {
 
-        if (this.timeRemaining <= 0) {
-            this.gameOverFunction();
-            this.timeRemaining = 0
-            this.scoreRight.text = "0.00";
-        }
-
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -155,6 +150,12 @@ class Play extends Phaser.Scene {
 
         if (this.gameOver) {
             return;
+        }
+
+        if (this.timeRemaining <= 0) {
+            this.gameOverFunction();
+            this.timeRemaining = 0
+            this.scoreRight.text = "0.00";
         }
 
         this.p1Rocket.update();
@@ -271,6 +272,9 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
+        if (this.p1Score > highScore) {
+            highScore = this.p1Score;
+        }
 
         // add to time based on points
         this.addTime(ship.points * 500 * game.settings.addTimerScale);
